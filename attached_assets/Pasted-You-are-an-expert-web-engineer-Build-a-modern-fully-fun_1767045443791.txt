@@ -1,0 +1,101 @@
+You are an expert web engineer. Build a modern, fully functional directory website in **Astro + TailwindCSS** that lists local events in Lexington, Kentucky. The site must be structured properly to push to GitHub and deploy to Vercel. Follow these requirements:
+
+1. **Project Structure**
+   - `src/pages/index.astro` → homepage
+   - `src/components/EventList.astro` → component to render events
+   - `src/data/events.ts` → static events array (use `EventItem` type)
+   - `src/types/event.ts` → TypeScript interface for `EventItem`
+   - `src/lib/events.ts` → a function `fetchCurrentEvents()` that returns `EventItem[]` (can initially return static events)
+
+2. **EventItem type** (`src/types/event.ts`):
+```ts
+export interface EventItem {
+  id: string;
+  title: string;
+  description?: string;
+  date: string; // ISO format
+  time?: string;
+  location?: string;
+  imageUrl?: string;
+  sourceUrl: string;
+  category: string; // e.g., 'this-week', 'this-weekend', 'free', 'pop-up', 'food-truck'
+}
+Static events (src/data/events.ts):
+
+Include at least 3 sample events for testing (with future dates)
+
+Export as export const events: EventItem[] = [...]
+
+Homepage (src/pages/index.astro):
+
+Import fetchCurrentEvents() from src/lib/events.ts
+
+Call it with const events = await fetchCurrentEvents();
+
+Render events using EventList.astro
+
+Display tabs or sections: "This Week", "This Weekend", "Free Events"
+
+EventList component (src/components/EventList.astro):
+
+Accepts events: EventItem[] as a prop
+
+Renders each event with title, date, location, description, link, and optional image
+
+Uses Tailwind for clean styling
+
+Scraper-ready structure (src/lib/events.ts):
+
+Define fetchCurrentEvents() as async returning static events initially
+
+Structure so that later we can add individual scrapers for:
+
+VisitLex events
+
+Craigslist yard sales
+
+Church calendars
+
+Food trucks
+
+Farmers markets
+
+Pop-ups, workshops, open mic nights, volunteer opportunities, HOA events
+
+Normalize all scraped data into EventItem objects
+
+Type safety
+
+Use TypeScript everywhere (.ts or .astro with TS)
+
+Avoid deprecated functions or any types
+
+GitHub and Vercel readiness
+
+Ensure project has package.json with necessary dependencies (astro, tailwindcss, postcss, autoprefixer, cheerio)
+
+Include scripts: "dev": "astro dev", "build": "astro build", "preview": "astro preview"
+
+Initialize Git (git init) and make the first commit
+
+Provide instructions to push to a GitHub repo and then link to Vercel for deployment
+
+Extras
+
+Ensure responsive layout with Tailwind
+
+Placeholder for images if event has none
+
+Tabs or filters must work without page reload
+
+Everything works in Codespaces/Replit/Astro dev environment
+
+Deliverables
+
+Fully typed Astro project ready to run
+
+Clear separation: data, types, components, pages, lib
+
+Clear instructions to push to GitHub and deploy to Vercel
+
+Generate all code files fully, with proper imports, exports, and TypeScript typing. Do not skip any files. Ensure there are no syntax errors or broken imports. The project must run immediately on npm run dev.
