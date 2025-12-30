@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useEvents } from "@/hooks/use-events";
 import { EventCard } from "@/components/EventCard";
 import { Navigation } from "@/components/Navigation";
@@ -11,6 +11,75 @@ export default function Home() {
   const [search, setSearch] = useState("");
   
   const { data: events, isLoading, error } = useEvents({ filter, search });
+
+  // Add JSON-LD structured data for SEO
+  useEffect(() => {
+    const upcomingEvents = events?.slice(0, 5) || [];
+    
+    const eventSchema = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: "Lexington Local Events",
+      description: "Discover what's happening in Lexington, Kentucky - events, workshops, festivals, and more",
+      url: window.location.href,
+      mainEntity: upcomingEvents.map(event => ({
+        "@type": "Event",
+        name: event.title,
+        description: event.description,
+        startDate: event.startTime,
+        endDate: event.startTime,
+        eventAttendanceMode: "OfflineEventAttendanceMode",
+        eventStatus: "EventScheduled",
+        location: {
+          "@type": "Place",
+          name: event.location,
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Lexington",
+            addressRegion: "Kentucky",
+            addressCountry: "US"
+          }
+        },
+        image: event.imageUrl,
+        url: event.sourceUrl,
+        offers: {
+          "@type": "Offer",
+          url: event.sourceUrl,
+          price: event.isFree ? "0" : "0",
+          priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+          validFrom: new Date().toISOString()
+        }
+      }))
+    };
+
+    // Add meta description tag
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Discover what\'s happening in Lexington, Kentucky. Browse local events, festivals, workshops, classes, volunteer opportunities, and community gatherings.');
+    }
+
+    // Add Open Graph tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 'Lexington Local Events - Discover What\'s Happening');
+    }
+
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) {
+      ogDescription.setAttribute('content', 'Find the best events happening in Lexington, Kentucky. Farmers markets, festivals, workshops, museums, volunteer opportunities and more.');
+    }
+
+    // Inject JSON-LD schema
+    let scriptTag = document.getElementById('event-schema');
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = 'event-schema';
+      scriptTag.type = 'application/ld+json';
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.textContent = JSON.stringify(eventSchema);
+  }, [events]);
 
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-primary/20">

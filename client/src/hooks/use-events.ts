@@ -19,7 +19,9 @@ export function useEvents(filters?: {
       const url = `/api/events?${params.toString()}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("Failed to fetch events");
-      return await res.json();
+      const data = await res.json();
+      // Support both old format (array) and new format (object with events array)
+      return Array.isArray(data) ? data : data.events || [];
     },
   });
 }

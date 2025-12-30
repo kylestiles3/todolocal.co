@@ -16,12 +16,24 @@ export async function registerRoutes(
     try {
       const filter = req.query.filter as 'all' | 'week' | 'weekend' | 'free' | undefined;
       const search = req.query.search as string | undefined;
+      const generatedAt = new Date();
       
       // Fetch live events from scrapers
       const scrapedEvents = await fetchAllEvents();
+      let sourceCount = 0; // Count of scraper sources that returned events
+      
+      // Track which sources returned events
+      if (scrapedEvents.length > 0) {
+        sourceCount = new Set(scrapedEvents.map(e => e.category)).size;
+      }
       
       if (!scrapedEvents || scrapedEvents.length === 0) {
-        return res.status(200).json([]);
+        return res.status(200).json({
+          events: [],
+          generatedAt,
+          sourceCount,
+          total: 0
+        });
       }
 
       // Convert scraped events to database format
@@ -66,12 +78,17 @@ export async function registerRoutes(
       }
 
       // Convert to a format suitable for frontend (add synthetic ID)
-      const result = filteredEvents.map((event, index) => ({
+      const events = filteredEvents.map((event, index) => ({
         id: index + 1,
         ...event
       }));
 
-      res.json(result);
+      res.json({
+        events,
+        generatedAt,
+        sourceCount,
+        total: events.length
+      });
     } catch (error) {
       console.error("Error fetching events:", error);
       res.status(500).json({ 
