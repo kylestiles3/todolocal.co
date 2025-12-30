@@ -1,0 +1,60 @@
+I want you to build a modern directory website for local events in Lexington, Kentucky. Use React + TypeScript + Vite + TailwindCSS for the frontend and Express for the backend API. Make it fully compatible with Replit, GitHub, and Vercel.
+
+Requirements:
+1. **Project structure:** src/, public/, package.json, tsconfig.json, vite.config.ts
+2. **Homepage:** Displays all events with tabs: "This Week", "This Weekend", "Free Events". Use clean, responsive design with TailwindCSS.
+3. **Event detail page:** Clicking an event opens a detail view with description, location, date, image, and source URL.
+4. **Event data:** Backend should fetch events from multiple sources:
+   - Lexington pop-up events
+   - Lexington community yard sales
+   - Lexington HOA/neighborhood events
+   - Lexington church events
+   - Lexington farmer/vendor pop-ups
+   - Lexington open mic nights
+   - Lexington food truck locations today
+   - Lexington community classes & workshops
+   - Lexington volunteer opportunities this weekend
+   Each source should have its own parser function that scrapes from one real, relevant URL, ensures events are not outdated, and returns JSON in this format:
+   ```ts
+   interface EventItem {
+     id: string;
+     title: string;
+     description?: string;
+     date: string; // ISO format
+     time?: string;
+     location?: string;
+     imageUrl?: string;
+     sourceUrl: string;
+     category: string;
+   }
+Frontend: Fetch events from backend API and render in the tabs. Include images if available. Use Wouter for routing.
+
+Bonus: Sorting by date, filtering by category, responsive layout.
+
+GitHub: Configure the project so it can push directly to a GitHub repo named todolocal.co without needing to enter credentials manually after the first push (use token auth).
+
+Vercel: Ensure the project can deploy directly to Vercel:
+
+Build command: npm run build
+
+Output directory: dist
+
+Proper handling of SPA routing (fallback to index.html)
+
+Generate all files properly:
+
+src/main.tsx for app entry
+
+src/App.tsx for routes and layout
+
+src/pages/Home.tsx, EventDetail.tsx, NotFound.tsx
+
+src/components/EventList.tsx
+
+src/lib/events.ts for API fetching and scraping
+
+public/index.html with <div id="root"></div> and correct script inclusion
+
+vite.config.ts, tsconfig.json, package.json, index.css
+
+Make sure everything compiles cleanly, no deprecated methods, no type errors. The app should run in Replit preview and push successfully to GitHub, then deploy on Vercel with all pages working.
